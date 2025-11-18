@@ -1,0 +1,97 @@
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Scanner;
+
+/**
+ * Main.java
+ * Drives the game, handles user input, and manages game flow.
+ */
+public class Main {
+
+    private static final Scanner scanner = new Scanner(System.in);
+    
+    public static void main(String[] args) {
+        System.out.println("=============================================");
+        System.out.println("  Multi-Player Dice Game (Java OOP Console)  ");
+        System.out.println("=============================================");
+
+        List<Player> players = setupPlayers();
+        if (players.isEmpty()) {
+            System.out.println("No players to start the game. Exiting.");
+            return;
+        }
+        
+        GameEngine engine = new GameEngine(players);
+        runGameLoop(engine);
+
+        System.out.println("\n--- FINAL RESULTS ---");
+        engine.showResults();
+        System.out.println("Thanks for playing!");
+        
+        scanner.close();
+    }
+
+    /**
+     * Handles setting up the players (getting count and names).
+     */
+    private static List<Player> setupPlayers() {
+        int numPlayers = readIntInput("Enter number of players (min 2): ", 2);
+        List<Player> players = new ArrayList<>();
+        scanner.nextLine(); // Consume newline after number input
+
+        for (int i = 0; i < numPlayers; i++) {
+            System.out.print("Enter name for Player " + (i + 1) + ": ");
+            String name = scanner.nextLine().trim();
+            while (name.isEmpty()) {
+                System.out.print("Name cannot be empty. Enter again: ");
+                name = scanner.nextLine().trim();
+            }
+            players.add(new Player(name));
+        }
+        return players;
+    }
+
+    /**
+     * Executes the main game loop.
+     */
+    private static void runGameLoop(GameEngine engine) {
+        int choice;
+        do {
+            System.out.println("\n[MENU] Enter 1 to play next round, 0 to view scoreboard and exit: ");
+            choice = readIntInput("", 0);
+            
+            if (choice == 1) {
+                GameEngine.RoundResult result = engine.playRound();
+                System.out.println(result);
+                engine.showResults();
+            }
+            
+        } while (choice != 0);
+    }
+    
+    /**
+     * Reads integer input and ensures it meets the minimum requirement (CV point: Robust Features).
+     */
+    private static int readIntInput(String prompt, int min) {
+        int value = 0;
+        boolean valid = false;
+        
+        while (!valid) {
+            try {
+                if (!prompt.isEmpty()) {
+                    System.out.print(prompt);
+                }
+                value = scanner.nextInt();
+                if (value >= min) {
+                    valid = true;
+                } else {
+                    System.out.println("[ERROR] Value must be " + (min == 0 ? "0 or greater." : "at least " + min + "."));
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("[ERROR] Invalid input. Please enter a whole number.");
+                scanner.nextLine(); // Consume the invalid input
+            }
+        }
+        return value;
+    }

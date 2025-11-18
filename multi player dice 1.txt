@@ -1,0 +1,30 @@
+import java.util.Objects;
+
+/**
+ * Player.java
+ * Defines the state and behavior of a single player.
+ * Enforces encapsulation for name and score.
+ */
+public class Player {
+    private final String name;
+    private int wins;
+
+    public Player(String name) {
+        this.name = Objects.requireNonNull(name).trim();
+        this.wins = 0;
+    }
+
+    // --- Getters ---
+    public String getName() {
+        return name;
+    }
+
+    public int getWins() {
+        return wins;
+    }
+
+    // --- Action ---
+    public void incrementWin() {
+        wins++;
+    }
+}

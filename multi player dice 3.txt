@@ -1,0 +1,112 @@
+import java.util.*;
+import java.util.stream.Collectors;
+
+/**
+ * GameEngine.java
+ * Manages the entire game state, rules, and scoring logic.
+ */
+public class GameEngine {
+    private final List<Player> players;
+    private final Dice dice;
+    private int roundNumber = 0;
+
+    public GameEngine(List<Player> players) {
+        this.players = players;
+        this.dice = new Dice();
+    }
+
+    /**
+     * Inner class to store the outcome of a single round for easy result transmission.
+     */
+    public static class RoundResult {
+        public final Map<Player, Integer> rolls;
+        public final List<Player> winners;
+        public final int highest;
+
+        public RoundResult(Map<Player, Integer> rolls, List<Player> winners, int highest) {
+            this.rolls = rolls;
+            this.winners = winners;
+            this.highest = highest;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new new StringBuilder();
+            sb.append("\n================ ROUND ").append(this.highest).append(" RESULTS ================");
+            
+            // Display all rolls using the LinkedHashMap order
+            sb.append("\nRolls: ");
+            boolean first = true;
+            for (Map.Entry<Player, Integer> e : rolls.entrySet()) {
+                if (!first) sb.append(" | ");
+                sb.append(e.getKey().getName()).append(" -> ").append(e.getValue());
+                first = false;
+            }
+            
+            sb.append("\n");
+
+            // Determine if it was a win or a tie
+            if (winners.size() == 1) {
+                sb.append("WINNER: ").append(winners.get(0).getName())
+                  .append(" with a roll of ").append(highest).append("!");
+            } else {
+                String tiedPlayers = winners.stream()
+                                            .map(Player::getName)
+                                            .collect(Collectors.joining(", "));
+                sb.append("TIE! Roll of ").append(highest).append(" between: ")
+                  .append(tiedPlayers).append(". No points awarded.");
+            }
+            sb.append("\n========================================================");
+            return sb.toString();
+        }
+    }
+
+    /**
+     * Executes one complete round of the dice game.
+     * @return The results of the round.
+     */
+    public RoundResult playRound() {
+        roundNumber++;
+        // Use LinkedHashMap to preserve display order (CV point)
+        Map<Player, Integer> rolls = new LinkedHashMap<>();
+        int highest = 0;
+
+        // 1. Roll the dice for all players and find the highest roll
+        for (Player p : players) {
+            int val = dice.roll();
+            rolls.put(p, val);
+            if (val > highest) highest = val;
+        }
+
+        // 2. Find all players who achieved the highest roll
+        List<Player> winners = new ArrayList<>();
+        for (Map.Entry<Player, Integer> e : rolls.entrySet()) {
+            if (e.getValue() == highest) {
+                winners.add(e.getKey());
+            }
+        }
+
+        // 3. Award the win only if there is a single winner (unique logic)
+        if (winners.size() == 1) {
+            winners.get(0).incrementWin();
+        }
+
+        System.out.println("\n--- Starting Round " + roundNumber + " ---");
+        return new RoundResult(rolls, winners, highest);
+    }
+
+    /**
+     * Displays the current scoreboard, sorted by wins (descending) then name (ascending).
+     */
+    public void showResults() {
+        System.out.println("\n--- Current Scoreboard ---");
+        
+        // Sorting by Wins (descending) and then Name (ascending) (CV point)
+        players.stream()
+            .sorted(Comparator.comparingInt(Player::getWins).reversed()
+                .thenComparing(Player::getName))
+            .forEach(p -> System.out.println(String.format("| %-15s | Wins: %d |", p.getName(), p.getWins())));
+        
+        System.out.println("--------------------------");
+    }
+}

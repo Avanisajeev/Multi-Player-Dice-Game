@@ -1,0 +1,78 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{fontspec}
+\usepackage[english, bidi=basic, provide=*]{babel}
+
+% Set default/Latin font to Sans Serif in the main (rm) slot
+\babelfont{rm}{Noto Sans}
+
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=blue,
+}
+
+\title{\textbf{Multi-Player Dice Game System}}
+\author{Developed by: Avanisajeev}
+\date{Submission Date: November 2025}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\section*{1. Project Overview}
+
+This project is a console-based, multi-player dice game developed in Java. The core objective was to apply Object-Oriented Programming (OOP) principles and robust data management techniques to build a structured, reliable, and easily expandable gaming system. The project specifically focuses on creating modular components for clear separation of concerns.
+
+\vspace{0.5cm}
+\begin{center}
+\begin{tabular}{|l|l|}
+    \toprule
+    \textbf{Metric} & \textbf{Detail} \\
+    \midrule
+    \textbf{Development Period} & February 2023 - March 2023 \\
+    \textbf{Core Language} & Java \\
+    \textbf{GitHub Repository} & \url{https://github.com/avanisajeev001/Multi-Player Dice Game} \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\section*{2. Technical Architecture and OOP Principles}
+
+The system architecture is strictly modular and adheres to core OOP principles:
+
+\begin{itemize}
+    \item \textbf{Modular Design and Encapsulation:} The system is decomposed into highly specialized classes (\texttt{Player}, \texttt{Dice}, \texttt{GameEngine}), ensuring low coupling and high cohesion. Encapsulation is enforced to protect the integrity of game state data.
+    \item \textbf{Game Logic Management:} The \texttt{GameEngine} class houses all complex logic, including simultaneous dice rolls, winner determination, and tie-breaking rules (no win awarded in a tie).
+    \item \textbf{Dynamic Data Structures:} A \texttt{List<Player>} is used for dynamic player management, and a \texttt{LinkedHashMap} is employed to maintain the order of player rolls during display, ensuring accurate reporting.
+\end{itemize}
+
+\section*{3. Robust Features and Scalability}
+
+The project integrates robust features necessary for a functional application:
+
+\begin{itemize}
+    \item \textbf{Input Validation and Stability:} Comprehensive input validation is included to gracefully handle invalid user input (e.g., non-numeric choice), preventing runtime crashes and improving user experience.
+    \item \textbf{Dynamic Scoreboard and Sorting:} The system executes robust features including a dynamic scoreboard, sorted effectively first by \textbf{wins (descending)} and then by \textbf{player name (alphabetical)} using Java Streams and custom \texttt{Comparators}.
+    \item \textbf{Scalability:} The modular \texttt{GameEngine} is designed to easily incorporate future enhancements, such as different types of dice (e.g., 8-sided, 10-sided) or expanded game modes, without restructuring the core logic.
+\end{itemize}
+
+\section*{4. Code Structure}
+
+The system is organized into a main driver class and three primary component classes for clear separation of responsibility.
+
+\begin{verbatim}
+/dice-game-project/
+├── src/
+│   ├── Player.java         // Player state and score
+│   ├── Dice.java           // Random number generation logic
+│   ├── GameEngine.java     // Game state and logic management
+│   └── Main.java           // User input and game flow
+└── README.md
+\end{verbatim}
+
+\end{document}
